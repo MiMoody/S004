@@ -3,20 +3,89 @@
 
 int main()
 {
-    char str[] = "Hello,World";
-    char s[256] = "\0";
-    int First = 6; // с какого индекса копируем
-    int Len = 5; // длина копирования
+    char str[256];
+    char s[256]="\n";
+    int First; // с какого индекса копировать
+    int Len; // длина копирования
+    char EmptyString[] = " ";
     char f[] = "%s";
+    char fd[] = "%d";
+    std::cout << "Enter your string:";
+    char outStr1[256] = "Enter the index you want to start copy from: ";
+    char outStr2[256] = "Enter the length of the copy: ";
+
     __asm
     {
         lea esi, str
+
+        push esi
+
         lea ecx, f
+
+        push ecx
+
+        call scanf
+
+        add esp, 8
+
+        lea ebx, outStr1
+
+        push ebx
+
+        lea ecx, f
+
+        push ecx
+
+        call printf
+
+        add esp, 8
+
+        lea ebx, First
+
+        push ebx
+
+        lea ecx, fd
+
+        push ecx
+
+        call scanf
+
+        add esp, 8
+
+        lea ebx, outStr2
+
+        push ebx
+
+        lea ecx, f
+
+        push ecx
+
+        call printf
+
+        add esp, 8
+
+        lea ebx, Len
+
+        push ebx
+
+        lea ecx, fd
+
+        push ecx
+
+        call scanf
+
+        add esp, 8
+
+        lea ecx, fd
         mov ecx, -1
         dec esi
 
         push edx
         mov edx, First
+
+        lea ecx, fd
+        mov ecx, -1
+        dec esi
 
         lea ebx, str
         push ebx
@@ -32,7 +101,9 @@ int main()
 
             StartCopy :
         cmp First, 0
-            jl StrNoChange
+            jge LengthCopy
+
+            mov First, 0
 
             LengthCopy :
         cmp Len, 0
@@ -45,10 +116,12 @@ int main()
             add edx, Len
 
             CheckLengthCopy :
-        add ecx, 1
+     
             cmp edx, ecx
-            jg StrNoChange
+            jbe Later
+            mov edx,ecx
 
+           Later:
             add esp, 8
             mov ecx, -1
             dec esi
@@ -81,7 +154,7 @@ int main()
         add esp, 8
             mov ecx, -1
             dec esi
-            lea esi, [str]
+            lea esi, [EmptyString]
             lea edi, [s]
             push edi
 
@@ -95,6 +168,7 @@ int main()
             pop edi
             pop esi
     }
+    std::cout << "Your line: ";
     std::cout << s;
 }
 
